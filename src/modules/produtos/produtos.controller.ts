@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Param, Put, Req } from '@nestjs/common';
+import { Controller, Delete, Get, Logger, Param, Post, Put, Req } from '@nestjs/common';
 import { ProdutosService } from './produtos.service';
 import { Produto } from './produto.entity';
 
@@ -16,8 +16,18 @@ export class ProdutosController {
     return this.produtosService.findProduto(id);
   }
 
+  @Post()
+  criarProduto(@Req() request: Request): any {
+    return this.produtosService.criarProduto(Produto.fromJson(request.body));
+  }
+  
   @Put(":id")
   atualizarProduto(@Param('id') id: Number, @Req() request: Request): any {
     return this.produtosService.atualizarProduto(id, Produto.fromJson(request.body));
+  }
+
+  @Delete(":id")
+  deleteProduto(@Param('id') id: any): Promise<void> {
+    return this.produtosService.deleteProduto(id);
   }
 }

@@ -21,7 +21,10 @@ export class ProdutosService {
     });
   }
 
-  createProduto(produto: Produto): Promise<Produto> {
+  async criarProduto(produto: Produto): Promise<Produto> {
+    if (!produto.url) {
+      produto.url = "https://cwsmalotes.com.br/wp-content/uploads/2022/07/15137691766_produto-de-teste-do-desenvolvedor.jpg"
+    }
     return this.produtoRepository.save(produto);
   }
 
@@ -51,5 +54,11 @@ export class ProdutosService {
     }
 
     return this.produtoRepository.save(produtoOld);
+  }
+
+  deleteProduto(id: any): Promise<void> {
+    return this.produtoRepository.delete(id).then(() => {
+      return;
+    });
   }
 }
