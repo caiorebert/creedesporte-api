@@ -9,6 +9,7 @@ import { ProdutosModule } from './modules/produtos/produtos.module';
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
+      url: process.env.POSTGRES_URL,
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
       port: 5432,
