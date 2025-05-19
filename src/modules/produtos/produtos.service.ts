@@ -53,6 +53,10 @@ export class ProdutosService {
       produtoOld.quantidadeEstoque = produto.quantidadeEstoque;
     }
 
+    if (produto.url) {
+      produtoOld.url = produto.url;
+    }
+
     return this.produtoRepository.save(produtoOld);
   }
 

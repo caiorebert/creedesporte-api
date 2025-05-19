@@ -11,7 +11,7 @@ export class Produto {
     @Column({ type: 'text', nullable: true, default: null })
     descricao: string;
 
-    @Column({ type: 'varchar', length: 255, nullable: true, default: null })
+    @Column({ type: 'text', nullable: true, default: null })
     url: string;
 
     @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
