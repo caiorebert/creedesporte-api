@@ -12,7 +12,14 @@ export class ProdutosService {
   ) {}
 
   getProdutos(): Promise<Array<Produto>> {
-    return this.produtoRepository.find();
+    try {
+      return this.produtoRepository.find({
+        order: { id : 'ASC' },
+      });
+    } catch (error) {
+      Logger.error('Erro ao buscar produtos', error);
+      throw new Error('Erro ao buscar produtos');
+    }
   }
 
   async findProduto(id: any): Promise<Produto | null> {
@@ -23,46 +30,51 @@ export class ProdutosService {
 
   async criarProduto(produto: Produto): Promise<Produto> {
     if (!produto.url) {
-      produto.url = "https://cwsmalotes.com.br/wp-content/uploads/2022/07/15137691766_produto-de-teste-do-desenvolvedor.jpg"
+      produto.url = "https://d2xtm1qsylcfqn.cloudfront.net/INTERSHOP/static/WFS/LBS-LBSUS-Site/-/LBS/en_US/not_available.png"
     }
     return this.produtoRepository.save(produto);
   }
 
   async atualizarProduto(id: any, produto: Produto): Promise<Produto> {
-    const produtoOld = await this.produtoRepository.findOne({
-      where: { id },
-    });
-
-    if (!produtoOld) {
-      throw new Error('Produto não encontrado');
+    try {
+      const produtoOld = await this.produtoRepository.findOne({
+        where: { id },
+      });
+  
+      if (!produtoOld) {
+        throw new Error('Produto não encontrado');
+      }
+  
+      if (produto.nome) {
+        produtoOld.nome = produto.nome;
+      }
+  
+      if (produto.descricao) {
+        produtoOld.descricao = produto.descricao;
+      }
+  
+      if (produto.preco) {
+        produtoOld.preco = produto.preco;
+      }
+  
+      if (produto.quantidadeEstoque) {
+        produtoOld.quantidadeEstoque = produto.quantidadeEstoque;
+      }
+  
+      if (produto.url) {
+        produtoOld.url = produto.url;
+      } else {
+        produtoOld.url = "https://d2xtm1qsylcfqn.cloudfront.net/INTERSHOP/static/WFS/LBS-LBSUS-Site/-/LBS/en_US/not_available.png";
+      }
+  
+      return this.produtoRepository.save(produtoOld);
+    } catch (error) {
+      throw new Error('Erro ao atualizar produto');
     }
-
-    if (produto.nome) {
-      produtoOld.nome = produto.nome;
-    }
-
-    if (produto.descricao) {
-      produtoOld.descricao = produto.descricao;
-    }
-
-    if (produto.preco) {
-      produtoOld.preco = produto.preco;
-    }
-
-    if (produto.quantidadeEstoque) {
-      produtoOld.quantidadeEstoque = produto.quantidadeEstoque;
-    }
-
-    if (produto.url) {
-      produtoOld.url = produto.url;
-    }
-
-    return this.produtoRepository.save(produtoOld);
   }
 
-  deleteProduto(id: any): Promise<void> {
-    return this.produtoRepository.delete(id).then(() => {
-      return;
-    });
+  async deleteProduto(id: any): Promise<void> {
+    await this.produtoRepository.softDelete(id);
+    return;
   }
 }

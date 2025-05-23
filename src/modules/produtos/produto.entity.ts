@@ -30,7 +30,7 @@ export class Produto {
     atualizadoEm: Date;
 
     @DeleteDateColumn({ type: 'timestamp', nullable: true })
-    deletadoEm: Date;
+    deletadoEm?: Date;
 
     static fromJson(json: any): Produto {
         const produto = new Produto();
